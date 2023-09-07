@@ -7,9 +7,16 @@
 template<typename T, template<typename...> class Container=std::vector>
 class Stack
 {
-	//static_assert(is_vector<Container>::value, "Not Implemented!");
-
 private:
+	template<typename R, template<typename ...> class S>
+	struct _container_assert { constexpr static bool is_vector = false; };
+
+	template<typename R>
+	struct _container_assert<R, std::vector> { constexpr static bool is_vector = true; };
+
+	static_assert(_container_assert<T, Container>::is_vector, "Not Implemented!");
+
+
 	const size_t DEFAULT_SIZE = 32;
 
 	size_t m_size;
@@ -70,7 +77,7 @@ public:
 	}
 
 	// Friends
-	friend std::ostream& operator<<(std::ostream& os, const Stack<T>& src)
+	friend std::ostream& operator<<(std::ostream& os, const Stack<T, Container>& src)
 	{
 		// Allows std::cout to print Stack contents
 		os << "__TOP__\n";

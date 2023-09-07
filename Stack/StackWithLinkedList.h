@@ -47,7 +47,7 @@ public:
 	}
 
 	// Friends
-	friend std::ostream& operator<<(std::ostream& os, const Stack<T>& src)
+	friend std::ostream& operator<<(std::ostream& os, const Stack<T, LinkedList>& src)
 	{
 		// Allows std::cout to print Stack contents
 		os << "__TOP__" << std::endl;
