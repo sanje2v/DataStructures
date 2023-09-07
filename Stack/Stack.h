@@ -7,6 +7,8 @@
 template<typename T, template<typename...> class Container=std::vector>
 class Stack
 {
+	//static_assert(is_vector<Container>::value, "Not Implemented!");
+
 private:
 	const size_t DEFAULT_SIZE = 32;
 

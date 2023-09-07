@@ -123,7 +123,7 @@ public:
 		src.m_pfirstNode = nullptr;
 	}
 
-	void insertFront(const T& data)
+	void insertFirst(const T& data)
 	{
 		auto pnewNode = new Node<T>(data);
 		pnewNode->next(this->m_pfirstNode);
@@ -135,7 +135,7 @@ public:
 
 	}
 
-	void insertBack(const T& data)
+	void insertLast(const T& data)
 	{
 		auto plastNode = this->lastNode();
 		if (!plastNode)

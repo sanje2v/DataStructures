@@ -9,11 +9,11 @@
 int main()
 {
     LinkedList<int> llist;
-    llist.insertBack(1);
-    llist.insertBack(2);
-    llist.insertBack(3);
-    llist.insertBack(4);
-    llist.insertFront(0);
+    llist.insertLast(1);
+    llist.insertLast(2);
+    llist.insertLast(3);
+    llist.insertLast(4);
+    llist.insertFirst(0);
     llist.removeFirst();
     llist.removeLast();
     llist.removeLast();
