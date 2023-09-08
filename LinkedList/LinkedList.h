@@ -4,48 +4,43 @@
 
 
 template<typename T>
-class LinkedList;
-
-template<typename T>
-class Node
-{
-private:
-	T m_data;
-	Node* m_pnextNode;
-
-public:
-	Node(const T& data)
-		: m_data(data), m_pnextNode(nullptr) {}
-
-	T data() const
-	{
-		return this->m_data;
-	}
-
-	void data(const T& data)
-	{
-		this->m_data = data;
-	}
-
-	Node* next() const
-	{
-		return this->m_pnextNode;
-	}
-
-	void next(Node* const node)
-	{
-		this->m_pnextNode = node;
-	}
-
-	friend LinkedList<T>;
-};
-
-
-template<typename T>
 class LinkedList
 {
 private:
-	Node<T> *m_pfirstNode;
+	class Node
+	{
+		friend LinkedList<T>;
+
+	private:
+		T m_data;
+		Node* m_pnextNode;
+
+	public:
+		Node(const T& data)
+			: m_data(data), m_pnextNode(nullptr) {}
+
+		T data() const
+		{
+			return this->m_data;
+		}
+
+		void data(const T& data)
+		{
+			this->m_data = data;
+		}
+
+		Node* next() const
+		{
+			return this->m_pnextNode;
+		}
+
+		void next(Node* const node)
+		{
+			this->m_pnextNode = node;
+		}
+	};
+
+	Node *m_pfirstNode;
 
 	void freeAll()
 	{
@@ -61,7 +56,7 @@ private:
 		this->m_pfirstNode = nullptr;
 	}
 
-	Node<T>* lastNode() const
+	Node* lastNode() const
 	{
 		auto pnextNode = this->m_pfirstNode;
 		if (!pnextNode)
@@ -80,6 +75,116 @@ private:
 	}
 
 public:
+	class iterator
+	{
+		friend class LinkedList<T>;
+
+	private:
+		Node* m_pNode;
+
+	public:
+		using iterator_category = std::forward_iterator_tag;
+		using difference_type = std::ptrdiff_t;
+		using value_type = T;
+		using pointer = T*;
+		using reference = T&;
+
+		iterator(Node* pfirstNode)
+			: m_pNode(pfirstNode) {}
+
+		reference operator*()
+		{
+			return this->m_pNode->m_data;
+		}
+
+		pointer operator->()
+		{
+			return &this->m_pNode->m_data;
+		}
+
+		iterator& operator++()
+		{
+			this->m_pNode = this->m_pNode->m_pnextNode;
+			return *this;
+		}
+
+		// Post increment
+		iterator operator++(int)
+		{
+			auto tmp = *this;
+			++this;
+			return tmp;
+		}
+
+		friend bool operator==(const iterator& a, const iterator& b) { return a.m_pNode == b.m_pNode; };
+		friend bool operator!=(const iterator& a, const iterator& b) { return a.m_pNode != b.m_pNode; };
+	};
+
+	class const_iterator
+	{
+		friend class LinkedList<T>;
+
+	private:
+		Node* m_pNode;
+
+	public:
+		using iterator_category = std::forward_iterator_tag;
+		using difference_type = std::ptrdiff_t;
+		using value_type = T;
+		using pointer = T* const;
+		using reference = const T &;
+
+		const_iterator(Node* pfirstNode)
+			: m_pNode(pfirstNode) {}
+
+		reference operator*()
+		{
+			return this->m_pNode->m_data;
+		}
+
+		pointer operator->()
+		{
+			return &this->m_pNode->m_data;
+		}
+
+		const_iterator& operator++()
+		{
+			this->m_pNode = this->m_pNode->m_pnextNode;
+			return *this;
+		}
+
+		// Post increment
+		const_iterator operator++(int)
+		{
+			auto tmp = *this;
+			++this;
+			return tmp;
+		}
+
+		friend bool operator==(const const_iterator& a, const const_iterator& b) { return a.m_pNode == b.m_pNode; };
+		friend bool operator!=(const const_iterator& a, const const_iterator& b) { return a.m_pNode != b.m_pNode; };
+	};
+
+	iterator begin()
+	{
+		return iterator(this->m_pfirstNode);
+	}
+
+	iterator end()
+	{
+		return iterator(nullptr);
+	}
+
+	const_iterator cbegin() const
+	{
+		return const_iterator(this->m_pfirstNode);
+	}
+
+	const_iterator cend() const
+	{
+		return const_iterator(nullptr);
+	}
+
 	LinkedList()
 		: m_pfirstNode(nullptr) {}
 
@@ -125,7 +230,7 @@ public:
 
 	void insertFirst(const T& data)
 	{
-		auto pnewNode = new Node<T>(data);
+		auto pnewNode = new Node(data);
 		pnewNode->next(this->m_pfirstNode);
 		this->m_pfirstNode = pnewNode;
 	}
@@ -139,9 +244,9 @@ public:
 	{
 		auto plastNode = this->lastNode();
 		if (!plastNode)
-			this->m_pfirstNode = new Node<T>(data);
+			this->m_pfirstNode = new Node(data);
 		else
-			plastNode->next(new Node<T>(data));
+			plastNode->next(new Node(data));
 	}
 
 	void removeFirst()

@@ -34,11 +34,18 @@ public:
 	{
 		assertIsNotEmpty();
 
-		auto value = this->m_llist.data();
+		auto value = *this->m_llist.begin();
 		--this->m_top;
 		this->m_llist.removeFirst();
 
 		return value;
+	}
+
+	T peek() const
+	{
+		assertIsNotEmpty();
+
+		return *this->m_llist.begin();
 	}
 
 	void clear()
@@ -52,8 +59,8 @@ public:
 		// Allows std::cout to print Stack contents
 		os << "__TOP__" << std::endl;
 
-		for (size_t i = src.m_top; i-- > 0;)
-			os << src.m_pArray[i] << std::endl;
+		for (auto it = src.m_llist.cbegin(); it != src.m_llist.cend(); ++it)
+			os << *it << std::endl;
 
 		return os;
 	}

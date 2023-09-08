@@ -10,7 +10,7 @@
 
 int main()
 {
-    Stack<int> stack;
+    Stack<int, LinkedList> stack;
     stack.push(1);
     stack.push(2);
     stack.push(3);
